@@ -1,0 +1,130 @@
+*{
+    padding: 0px;
+    margin: 0px;
+    box-sizing: border-box;
+}
+
+body{
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+button{
+    border-style: none;
+    background-color: white;
+    outline: none;
+}
+button:disabled img{
+    filter: opacity(0.3);
+    cursor: auto;
+}
+.kanji{
+    width: 100%;
+    height: 200px;
+    display: flex;
+    justify-content: center;
+}
+
+.page{
+    width: 450px;
+    overflow: hidden;
+    margin: 30px;
+}
+
+#tarjetas{
+    position: relative;
+    height: 330px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.tarjeta{
+    position: relative;
+    min-width: 100%;
+    height: 300px;
+    margin-right: 50px;
+    border-radius: 30px;
+    border-width: 15px;
+    border-style: solid;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0px 30px 0px -20px #555;
+}
+.tarjeta p {
+    background-color: white;
+    border-radius: 100%;
+    width: 80%;
+    padding: 80px 0px;
+    text-align: center;
+    font-size: 40px;
+    box-shadow: inset 0px 0px 15px 5px gray;
+}
+.numeros{
+    text-align: center;
+    font-size: 25px;
+}
+
+.verbo{
+    border-color: rgb(34, 177, 76);
+    background-color: rgb(52, 216, 101);
+    border-bottom-color: rgb(28, 147, 64);
+    border-right-color: rgb(28, 147, 64);
+}
+.verbo p f h{color: rgb(52, 216, 101);}
+
+.adjetivo{
+    border-color: rgb(255, 201, 14);
+    background-color: rgb(255, 242, 0);
+    border-bottom-color: rgb(255, 127, 39);
+    border-right-color: rgb(255, 127, 39);
+}
+.adjetivo p f h{color: rgb(255, 242, 0);}
+
+.godan{color: #3498DB;}
+.ichidan{color: #FF5733;}
+
+#izq, #der{
+    cursor: pointer;
+    user-select: none;
+}
+
+f, w, k{
+    display: inline-block;
+    font-family: "游明朝";
+}
+k:hover{
+    cursor: pointer;
+    color: gray;
+}
+h{
+    font-family: "游明朝";
+	user-select: none;
+	display: table-row-group;
+	line-height: 0px;
+	text-align: center;
+	font-size: 50%;
+    display: block;
+    font-weight: bold;
+}
+
+@media only screen and (max-width: 700px) {
+    .page{
+        margin: 0px;
+    }
+    #izq,#der{
+        order: 1;
+        width: 50%;
+    }
+    .page{
+        width: 400px;
+    }
+    .tarjeta{
+        min-width: 400px;
+        margin-right: 100px;
+    }
+}

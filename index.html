@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Tarjetas</title>
+</head>
+<body>
+    <div class="kanji"><video id="vid" src="" loop autoplay controls></video></div>
+    <button id="izq" disabled><img src="izq.png"></button>
+    <div class="page">
+        <div id="tarjetas">
+        </div>
+        <div class="numeros"><label id="num">1</label>/<label id="cant"></label></div>
+    </div>
+    <button id="der"><img src="der.png"></button>
+</body>
+</html>
+<script>
+    var posX = 0;
+    var numTarjetas = 0;
+    var actual = 1;
+    var kanji = {};
+
+    izq.addEventListener('click', () => {
+        if (actual > 1) {
+            actual--;
+            var mov = setInterval( () => {
+                posX += 10;
+                tarjetas.style.left = `${posX}px`;
+                if (!(posX % 500)){
+                    clearInterval(mov);
+                    num.innerText = actual;
+                    botones();
+                }
+            },10);
+        }
+    });
+
+    der.addEventListener('click', () => {
+        if (actual < numTarjetas) {
+            actual++;
+            var mov = setInterval( () => {
+                posX -= 10;
+                tarjetas.style.left = `${posX}px`;
+                if (!(posX % 500)){
+                    clearInterval(mov);
+                    num.innerText = actual;
+                    botones();
+                }
+            },10);
+        }
+    });
+
+    function botones() {
+        if (actual == numTarjetas)
+            der.disabled = true;
+        else
+            der.disabled = false;
+        if (actual == 1)
+            izq.disabled = true;
+        else
+            izq.disabled = false;
+    }
+
+    window.addEventListener('load', () => {
+
+        fetch('consultarKanji.php')
+	    .then( r => r.json() )
+	    .then( data => data.forEach( v => kanji[v.kanji] = v.src ))
+	    .catch( e => console.error(e) );
+
+	    fetch('consultar.php')
+	    .then( r => r.json() )
+	    .then( data => {
+		    data.forEach( v => crearTarjeta(v) );
+            numTarjetas = data.length;
+            cant.innerText = numTarjetas;
+
+            document.querySelectorAll('k').forEach( v => {
+                v.addEventListener('click', () => {
+                    vid.src = 'https://media.kanjialive.com/kanji_animations/kanji_mp4/'+kanji[v.innerText]
+                    vid.playbackRate = 2;
+                    });
+            });
+	    })
+	    .catch( e => console.error(e) );
+
+        
+    });
+
+    //crearTarjeta({tipo: 'verbo', jap: 'Hola', grupo: 'ichidan'});
+    //crearTarjeta({tipo: 'verbo', jap: 'Hola', grupo: 'godan'});
+
+    function crearTarjeta(t){
+        //numTarjetas++;
+        var nueva = document.createElement('div');
+        nueva.classList.add('tarjeta');
+        nueva.classList.add(t.tipo);
+
+        var kan = document.createElement('p');
+        var hir = document.createElement('span');
+        hir.classList.add(t.grupo);
+
+        var txt = toFurigana(t.jap);
+
+        hir.innerText = txt.slice(-1);
+        kan.innerHTML = txt.slice(0, -1);
+        kan.appendChild(hir);
+
+        nueva.appendChild(kan);
+        tarjetas.appendChild(nueva);
+    }
+
+    function toFurigana(str){
+	    var furi = "";
+	    var kan = "";
+	    var a = false;
+	    for (let i = 0; i < str.length; i++) {
+		    if (str.charAt(i) == '(') {
+			    a = true;
+			    continue;
+		    }else if (str.charAt(i) == ')') {
+			    if (kan.length) {
+				    let arr = kan.split(',', 2);
+				    furi += '<f><h>'+arr[1]+'</h><k>'+arr[0]+'</k></f>';
+				    kan = '';
+			    }
+			    a = false;
+			    continue;
+		    }else if (a) {
+			    kan += str.charAt(i);
+		    }else{
+			    furi += str.charAt(i);
+		    }
+	    }
+	    return furi;
+    }
+</script>
